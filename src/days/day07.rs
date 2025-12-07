@@ -16,7 +16,6 @@ fn day07(file_name: &str) {
     let start_beem = first_line.find('S').expect("Has to have a start beam");
     let mut beams: HashMap<usize, u128> = HashMap::from([(start_beem, 1)]);
     let mut counter = 0;
-    // let mut timelines = 1;
     for line in lines {
         let previous_beams = beams.clone();
         beams.clear();
