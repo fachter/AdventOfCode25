@@ -1,8 +1,12 @@
-use std::{cmp::max, collections::HashMap, fs};
+use std::{cmp::max, collections::HashMap};
+
+use crate::utils::file::read_lines;
 
 pub fn run_battery_calculations() {
+    println!("--- Day 3: Lobby ---");
     day_03("03-test");
     day_03("03");
+    println!("--------------------\n\n");
 }
 
 fn day_03(file_name: &str) {
@@ -43,15 +47,6 @@ fn day_03(file_name: &str) {
     }
 
     println!("Sum: {}", sum);
-}
-
-fn read_lines(file_name: &str) -> Vec<String> {
-    let file_name = format!("data/{}.txt", file_name);
-    let file_content = fs::read_to_string(file_name).expect("Could not read file!!");
-    file_content
-        .lines()
-        .map(|x| x.to_string())
-        .collect::<Vec<String>>()
 }
 
 fn update_max_values(
