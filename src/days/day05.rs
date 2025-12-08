@@ -3,8 +3,8 @@ pub fn run_food_expiration() {
     println!("--------------------\n\n");
 }
 
-fn day_05(file_name: &str) {
-    let lines = crate::utils::file::read_lines(file_name);
+// fn day_05(file_name: &str) {
+//   let lines = crate::utils::file::read_lines(file_name);
 
-    // Your code goes here
-}
+//   // Your code goes here
+// }
