@@ -8,3 +8,7 @@ pub fn read_lines(file_name: &str) -> Vec<String> {
         .map(|x| x.to_string())
         .collect::<Vec<String>>()
 }
+
+pub fn read_file(file_name: &str) -> String {
+    let file_name = format!("data/{}.txt", file_name);
+    fs::read_to_string(file_name).expect("Could not read file!!")

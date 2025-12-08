@@ -30,17 +30,43 @@ fn day_04(file_name: &str) {
         }
     }
 
-    let mut counter = 0;
+    let mut movable_rolls = get_movable_rolls(&map);
+    let counter = movable_rolls.len();
+    println!("Initial Round removed: {}", counter);
+    let mut total_counter = movable_rolls.len();
+
+    while movable_rolls.len() > 0 {
+        remove_paper_rolls(&mut map, &mut movable_rolls);
+        movable_rolls = get_movable_rolls(&map);
+        total_counter += movable_rolls.len();
+    }
+
+    println!("Total removed: {}", total_counter);
+
+    // Your code goes here
+}
+
+fn get_movable_rolls(map: &HashMap<(usize, usize), Rc<RefCell<PaperRoll>>>) -> Vec<RoleRef> {
+    let mut movable_rolls: Vec<RoleRef> = Vec::new();
     for paper_roll in map.values() {
         let borrowed = paper_roll.borrow();
         if borrowed.neighbors.len() < 4 {
-            counter += 1;
+            movable_rolls.push(Rc::clone(paper_roll));
         }
     }
+    movable_rolls
+}
 
-    println!("Number of edge paper rolls: {}", counter);
-
-    // Your code goes here
+fn remove_paper_rolls(
+    map: &mut HashMap<(usize, usize), RoleRef>,
+    movable_rolls: &mut Vec<RoleRef>,
+) {
+    for paper_roll in movable_rolls.iter() {
+        let borrowed = paper_roll.borrow();
+        let position = (borrowed.x, borrowed.y);
+        PaperRoll::remove_from_neighbors(&paper_roll);
+        map.remove(&position);
+    }
 }
 
 type RoleRef = Rc<RefCell<PaperRoll>>;
@@ -98,5 +124,20 @@ impl PaperRoll {
                 }
             }
         }
+    }
+
+    fn remove_from_neighbors(me: &RoleRef) {
+        // Upgrade Weak references to strong Rc and remove 'me' from their neighbors
+        for neighbor_weak in &me.borrow().neighbors {
+            if let Some(neighbor_rc) = neighbor_weak.upgrade() {
+                neighbor_rc
+                    .borrow_mut()
+                    .neighbors
+                    .retain(|n| n.upgrade().map_or(false, |strong| !Rc::ptr_eq(&strong, me)));
+            }
+        }
+
+        // // Clear our own neighbors
+        // me.borrow_mut().neighbors.clear();
     }
 }
