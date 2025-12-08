@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub fn run_playground() {
     println!("--- Day 8: Playground ---");
 
@@ -52,6 +54,23 @@ fn day08(file_name: &str) {
         "First 10 flattened neighbors: {:?}",
         &flattened_neighbors[..10.min(flattened_neighbors.len())]
     );
+
+    let mut clusters: HashMap<usize, u32> = HashMap::new();
+    let mut cluster_id = 0;
+
+    for neighbor in flattened_neighbors.iter().take(10) {
+        println!(
+            "Point {} is close to Point {} with distance {:.4}",
+            neighbor.this, neighbor.index, neighbor.distance
+        );
+
+        let ca = *clusters.get(&neighbor.this).unwrap_or(&cluster_id);
+        let cb = *clusters.get(&neighbor.index).unwrap_or(&cluster_id);
+
+        let m = ca.min(cb);
+        clusters.insert(neighbor.this, m);
+        clusters.insert(neighbor.index, m);
+    }
 }
 
 struct Point3D {
